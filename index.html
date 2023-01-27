@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Happy Birthday to xjy</title>
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:900'><link rel="stylesheet" href="./style.css">
+
+</head>
+<a>
+<!-- partial:index.partial.html -->
+<h1>Happy Birthday</h1>
+<h1 style="margin-top: 200px;font-size: 30px;" id="age">名字+年龄</h1>
+<h1 style="margin-top: 300px;font-size: 20px;" id="cod">倒计时</h1>
+
+<a href="./make_cake/index.html"><h1 style="margin-top:250px;font-size: 10px;opacity: 0.2;cursor:pointer">点这里</h1></a>
+<canvas id="birthday"></canvas>
+<!-- partial -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script  src="./script.js"></script>
+
+<script>
+//主人公名字
+var name="周丹";
+//主人公生日 yyyy-mm-dd
+var the_birthday="2002-02-19";
+
+function fndate(){
+  //显示当前日期
+  var oDiv=document.getElementById("cod");
+  var date=new Date();
+  var year=date.getFullYear();//当前年份
+  var month=date.getMonth();//当前月份
+  var data=date.getDate();//天
+  var hours=date.getHours();//小时
+  var minute=date.getMinutes();//分
+  var second=date.getSeconds();//秒
+  var time=year+"-"+fnW((month+1))+"-"+fnW(data)+" "+fnW(hours)+":"+fnW(minute)+":"+fnW(second);
+  oDiv.innerHTML=time;
+  setTimeout("fndate()",1000);
+}
+//补位 当某个字段不是两位数时补0
+function fnW(str){
+  var num;
+  str>10?num=str:num="0"+str;
+  return num;
+}
+//计算年龄
+function jsGetAge(strBirthday){
+  var returnAge;
+  // 根据生日计算年龄
+  //以下五行是为了获取出生年月日，如果是从身份证上获取需要稍微改变一下
+  var strBirthdayArr=strBirthday.split("-");
+  var birthYear = strBirthdayArr[0];
+  var birthMonth = strBirthdayArr[1];
+  var birthDay = strBirthdayArr[2];
+ 
+  d = new Date();
+  var nowYear = d.getFullYear();
+  var nowMonth = d.getMonth() + 1;
+  var nowDay = d.getDate();
+ 
+  if(nowYear == birthYear){
+    returnAge = 0;//同年 则为0岁
+  }
+  else{
+    var ageDiff = nowYear - birthYear ; //年之差
+    if(ageDiff > 0){
+      if(nowMonth == birthMonth) {
+        var dayDiff = nowDay - birthDay;//日之差
+        if(dayDiff < 0)
+        {
+          returnAge = ageDiff - 1;
+        }
+        else
+        {
+          returnAge = ageDiff ;
+        }
+      }
+      else
+      {
+        var monthDiff = nowMonth - birthMonth;//月之差
+        if(monthDiff < 0)
+        {
+          returnAge = ageDiff - 1;
+        }
+        else
+        {
+          returnAge = ageDiff ;
+        }
+      }
+    }
+    else
+    {
+      returnAge = -1;//返回-1 表示出生日期输入错误 晚于今天
+    }
+  }
+ 
+  return returnAge;//返回周岁年龄
+ 
+}
+
+
+//获取年龄并展示
+function getAge() {
+  // var name="周丹  ";
+  
+  var res= jsGetAge(the_birthday); 
+  //插入html
+  var getAgePosition=document.getElementById("age");
+  getAgePosition.innerHTML=name+res+"s";
+  setTimeout("getAge()",1000);
+}
+
+
+//显示倒计时
+function countdown( ) {
+  strBirthday=the_birthday;
+  //解析生日时间
+  var strBirthdayArr=strBirthday.split("-");
+  var birthYear = strBirthdayArr[0];
+  var birthMonth = strBirthdayArr[1];
+  var birthDay = strBirthdayArr[2];
+  //当前日期
+  var date=new Date();
+  var year=date.getFullYear();//当前年份
+  var month=date.getMonth();//当前月份
+  var data=date.getDate();//天
+
+  var imonth=month+1;
+
+  var res;
+  if (imonth==birthMonth&&data==birthDay ) res="今天是你的生日！";
+  else {
+    if ((imonth==birthMonth&&data>birthDay)||imonth>birthMonth) {
+        year=year+1;
+    }
+    //倒计时目标日
+    var dtime=year+"/"+birthMonth+"/"+birthDay+" 00:00:00";
+    dtime=new Date(dtime);
+
+
+    //获取当前的时间
+    var ntime=new Date();
+    var c=dtime.getTime()-ntime.getTime();
+    //总差进行换算
+    var day = parseInt(c / (1000 * 60 * 60 * 24));
+    var hour=parseInt((c % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var min=parseInt((c % (1000 * 60 * 60)) / (1000 * 60));
+    var sec=parseInt((c % (1000 * 60)) / 1000);
+    res="距离生日："+day + "日"+hour + "时"+min + "分"+sec + "秒";
+    
+  }
+    var oDiv=document.getElementById("cod");
+    oDiv.innerHTML=res;
+    setTimeout("countdown()",1000);
+
+}
+// fndate();
+countdown();
+getAge();
+</script>
+
+</body>
+</html>
